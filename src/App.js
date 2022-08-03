@@ -1,23 +1,26 @@
-import logo from './logo.svg';
-import './App.css';
+import "./App.css";
+import Dashboard from "./pages/Dashboard/Dashboard";
+import AddProduct from "./pages/Product/AddProduct";
+import ShowProduct from "./pages/Product/ShowProducts";
+import { Routes, Route } from "react-router-dom";
+import ShowOrders from "./pages/Order/ShowOrders";
+import PendingOrders from "./pages/Order/PendingOrders";
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <Dashboard>
+        <Routes>
+          <Route path="/product-add" element={<AddProduct></AddProduct>} />
+          <Route path="/product-show" element={<ShowProduct></ShowProduct>} />
+
+          <Route path="/orders-show" element={<ShowOrders></ShowOrders>} />
+          <Route
+            path="/orders-pending"
+            element={<PendingOrders></PendingOrders>}
+          />
+        </Routes>
+      </Dashboard>
     </div>
   );
 }
