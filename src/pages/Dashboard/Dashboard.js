@@ -1,13 +1,26 @@
 import React from "react";
-import { Link, NavLink } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import "./Dashboard.css";
+import auth from "../../firebase.init";
+import { useAuthState } from "react-firebase-hooks/auth";
+import Loading from "../../pages/Loading/Loading";
+import { signOut } from "firebase/auth";
 
-const dashboard = ({ children }) => {
+const Dashboard = ({ children }) => {
+  const logout = () => {
+    signOut(auth);
+  };
+  const navigate = useNavigate();
+  const [user, loading, error] = useAuthState(auth);
+  if (loading) {
+    return <Loading></Loading>;
+  }
+  console.log(user);
   return (
     <div>
       <div className="_db_container shadow-lg">
-        {/* TOGGLE BUTTON  */}
         <div className="navbar bg-base-100">
+          {/* TOGGLE BUTTON  */}
           <div className="flex-none">
             <label
               for="my-drawer-2"
@@ -32,7 +45,7 @@ const dashboard = ({ children }) => {
           {/* LOGO OF THE ADMIN DB  */}
           <div className="flex-1">
             <a className="btn btn-ghost normal-case text-xl">
-              Aleeha-Dashboard
+              Seller-Dashboard
             </a>
           </div>
 
@@ -79,26 +92,51 @@ const dashboard = ({ children }) => {
           <div className="dropdown dropdown-end">
             <label tabindex="0" className="btn btn-ghost btn-circle avatar">
               <div className="w-10 rounded-full">
-                <img src="https://placeimg.com/80/80/people" />
+                {user?.photoURL ? (
+                  <img src={user.photoURL} alt="" />
+                ) : (
+                  <img
+                    src="https://cdn-icons-png.flaticon.com/512/1828/1828833.png"
+                    alt=""
+                  />
+                )}
               </div>
             </label>
-            <ul
-              tabindex="0"
-              className="mt-3 p-2 shadow menu menu-compact dropdown-content bg-base-100 rounded-box w-52"
-            >
-              <li>
-                <a className="justify-between">
-                  Profile
-                  <span className="badge">New</span>
-                </a>
-              </li>
-              <li>
-                <a>Settings</a>
-              </li>
-              <li>
-                <a>Logout</a>
-              </li>
-            </ul>
+            {user ? (
+              <ul
+                tabindex="0"
+                className="mt-3 p-2 shadow menu menu-compact dropdown-content bg-base-100 rounded-box w-52"
+              >
+                <li>
+                  <a className="justify-between">
+                    Profile
+                    <span className="badge">New</span>
+                  </a>
+                </li>
+                <li>
+                  <a>Settings</a>
+                </li>
+                <li>
+                  <a onClick={logout}>Logout</a>
+                </li>
+              </ul>
+            ) : (
+              <ul
+                tabindex="0"
+                className="mt-3 p-2 shadow menu menu-compact dropdown-content bg-base-100 rounded-box w-52"
+              >
+                <li>
+                  <a
+                    onClick={() => {
+                      navigate("/login");
+                    }}
+                    className=""
+                  >
+                    Sign In
+                  </a>
+                </li>
+              </ul>
+            )}
           </div>
         </div>
       </div>
@@ -215,4 +253,4 @@ const dashboard = ({ children }) => {
   );
 };
 
-export default dashboard;
+export default Dashboard;
